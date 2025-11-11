@@ -27,8 +27,39 @@ async function run() {
   try {
     await client.connect();
 
+    const db = client.db("bookHaven_db");
+    const booksCollection = db.collection("books");
+    const commentsCollection = db.collection("comments");
+
+    console.log("Successfully connected to MongoDB!");
+
     app.get("/test", (req, res) => {
       res.send("Book Haven API is working!");
+    });
+
+    app.get("/books/latest", async (req, res) => {
+      try {
+        const cursor = booksCollection
+          .find()
+          .sort({ addedAt: -1 })
+          .limit(6);
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching latest books:", error);
+        res.status(500).send({ message: "Failed to fetch books" });
+      }
+    });
+
+    app.get("/books", async (req, res) => {
+      try {
+        const cursor = booksCollection.find().sort({ addedAt: -1 });
+        const result = await cursor.toArray();
+        res.send(result);
+      } catch (error) {
+        console.error("Error fetching books:", error);
+        res.status(500).send({ message: "Failed to fetch books" });
+      }
     });
 
     await client.db("admin").command({ ping: 1 });
@@ -40,6 +71,7 @@ async function run() {
   }
 }
 run().catch(console.dir);
+
 app.listen(port, () => {
   console.log(`Book Haven server is running on port: ${port}`);
 });
