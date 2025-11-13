@@ -31,4 +31,20 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.delete("/:id", async (req, res) => {
+  try {
+    const db = req.app.locals.db;
+    const { ObjectId } = require("mongodb");
+    const result = await db
+      .collection("comments")
+      .deleteOne({ _id: new ObjectId(req.params.id) });
+    res.json(result);
+  } catch (error) {
+    console.error("Error deleting comment:", error);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+module.exports = router;
+
 module.exports = router;

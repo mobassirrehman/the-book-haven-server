@@ -31,7 +31,7 @@ async function run() {
 
     const db = client.db("bookHaven_db");
     app.locals.db = db;
-    
+
     const booksCollection = db.collection("books");
     const commentsCollection = db.collection("comments");
 
