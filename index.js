@@ -6,7 +6,12 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // middleware
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://dapper-trifle-02574c.netlify.app",
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 const commentRoutes = require("./routes/comments");
@@ -27,7 +32,7 @@ app.get("/", (req, res) => {
 
 async function run() {
   try {
-    await client.connect();
+    // await client.connect();
 
     const db = client.db("bookHaven_db");
     app.locals.db = db;
